@@ -1,0 +1,1 @@
+export const logo = "https://thumbs.dreamstime.com/b/glasses-books-logo-cartoon-vector-illustration-highlighting-creative-great-academic-reading-knowledge-based-346066482.jpg"
