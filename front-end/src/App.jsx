@@ -8,6 +8,8 @@ import AdminDashBoard from './pages/dashBoard/AdminDashBoard'
 import StudentDashBoard from './pages/dashBoard/StudentdashBoard'
 import QuestionForm from './components/UploadQuestion'
 import GetQuestions from './components/SetTest'
+import PrivateRoute from './auth/PrivateRoute'
+import { NotFount } from './pages/NotFound'
 
 const App = () => {
   return (
@@ -19,11 +21,18 @@ const App = () => {
           <Route path='/sign-up' element={<SignUpForm />}/>
         </Route>
         {/* private routes */}
-        <Route path="/" element={<Home/>}/>
-        <Route path='/admin-dashboard' element={<AdminDashBoard/>}/>
-        <Route path='/admin-setQuestions' element={<QuestionForm/>}/>
-        <Route path='/student-dashboard' element={<StudentDashBoard/>}/>
-        <Route path='/admin/setTest' element={<GetQuestions/>}/>
+        <Route element={<PrivateRoute/>}>
+          
+          <Route path='/admin-dashboard/:id' element={<AdminDashBoard/>}/>
+          <Route path='/admin-setQuestions' element={<QuestionForm/>}/>
+          <Route path='/admin/setTest' element={<GetQuestions/>}/>
+        </Route>
+        {/* private routes for student */}
+        <Route element={<PrivateRoute/>}>
+          <Route path='/student-dashboard/:id' element={<StudentDashBoard/>}/>
+        </Route>
+        <Route index element={<Home/>}/>
+        <Route path='*' element={<NotFount/>}/>
       </Routes>
     </div>
   )

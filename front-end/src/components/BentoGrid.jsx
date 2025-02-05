@@ -3,7 +3,7 @@ const BentoGrids=()=> {
     const navigate = useNavigate();
 
     return (
-      <div className="bg-gray-50 sm:py-32">
+      <div className="bg-gradient-to-l from-fuchsia-400 to-cyan-200 sm:py-32">
         <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
           <h2 className="text-center text-base/7 font-semibold text-indigo-600">Admin</h2>
           <p className="mx-auto mt-2 max-w-lg text-center text-4xl font-semibold tracking-tight text-balance text-gray-950 sm:text-5xl">

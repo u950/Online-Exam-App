@@ -2,8 +2,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const user = {
-  name: 'Tom Cook',  //admin email username
-  email: 'tom@example.com',
+  name: 'user',  //admin email username
+  email: 'user@example.com',
   imageUrl:
     'https://static.vecteezy.com/system/resources/thumbnails/005/005/788/small/user-icon-in-trendy-flat-style-isolated-on-grey-background-user-symbol-for-your-web-site-design-logo-app-ui-illustration-eps10-free-vector.jpg',
 }
@@ -16,8 +16,10 @@ const navigation = [
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '#', onClick:()=>{
+    localStorage.removeItem('token');
+    window.location.href = '/login'
+  } },
 ]
 
 function classNames(...classes) {
@@ -85,6 +87,7 @@ const StudentDashBoard=()=> {
                         <MenuItem key={item.name}>
                           <a
                             href={item.href}
+                            onClick={item.onClick}
                             className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                           >
                             {item.name}
@@ -114,6 +117,7 @@ const StudentDashBoard=()=> {
                   key={item.name}
                   as="a"
                   href={item.href}
+                  onClick={item.onClick}
                   aria-current={item.current ? 'page' : undefined}
                   className={classNames(
                     item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
@@ -164,8 +168,13 @@ const StudentDashBoard=()=> {
           </div>
         </header>
         <main>
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl size-full px-4 py-6 sm:px-6 lg:px-8 bg-gradient-to-r from-cyan-200 to-lime-200">
             {/* Your content */}
+                <h1>HI student</h1>
+                <h1>HI student</h1>
+                <h1>HI student</h1>
+                <h1>HI student</h1>
+                <h1>HI student</h1>
                 <h1>HI student</h1>
             </div>
         </main>

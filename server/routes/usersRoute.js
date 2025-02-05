@@ -4,6 +4,7 @@ import { User } from '../models/user_db.js';
 const router = express.Router();
 
 // fetch exams for specific users with user id
+// add token based authenticastion for user and protected routes
 
 router.get('/:id1/test/:id' ,async (req,res)=>{
     const {id1, id} = req.params;

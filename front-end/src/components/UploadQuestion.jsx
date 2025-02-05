@@ -96,9 +96,9 @@ const QuestionForm=()=>{
     };
 
     return (
-        <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8 bg-gradient-to-r from-violet-200 to-pink-200">
             <div className="max-w-7xl mx-auto">
-                <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900 mb-8">
+                <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900 mb-8 font-robert-regular">
                     Upload Questions to Database
                 </h2>
 
@@ -125,28 +125,17 @@ const QuestionForm=()=>{
                                 Subject
                             </label>
                             <div className="max-w-screen-md sm:w-3/4">
-                                <Listbox value={selectedSubjected} onChange={setSelectedSubject}>
-                                    <div className="relative">
-                                        <ListboxButton className="relative w-30 cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-center border border-gray-300 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                                            {selectedSubjected.name} 
-                                        </ListboxButton>
-                                        <ListboxOptions className="absolute mt-1 max-h-60 w-30 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
-                                            {Subjects.map((Subject) => (
-                                                <ListboxOption
-                                                    key={Subject.id}
-                                                    value={Subject}
-                                                    className={({ selected }) =>
-                                                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
-                                                            selected ? 'bg-indigo-100 text-indigo-900' : 'text-gray-900'
-                                                        }`
-                                                    }
-                                                >
-                                                    {Subject.name}
-                                                </ListboxOption>
-                                            ))}
-                                        </ListboxOptions>
-                                    </div>
-                                </Listbox>
+                                <select 
+                                    name="subject" 
+                                    id={Subjects.id}
+                                    onChange={()=>selectedSubjected(e.target.value)}
+                                    className="rounded-lg p-2 border-2 border-gray-300 cursor-pointer hover:border-indigo-500 drop-shadow-md"
+                                >
+                                    {Subjects.map((item, id) =>(
+                                        <option id={item.id}
+                                        >{item.name}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
@@ -232,7 +221,7 @@ const QuestionForm=()=>{
                         <div className="flex justify-end mt-6">
                             <button
                                 type="submit"
-                                className="rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="rounded-md cursor-progress bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 Save Question
                             </button>

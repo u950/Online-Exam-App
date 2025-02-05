@@ -3,22 +3,24 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import BentoGrids from '../../components/BentoGrid'
 
 const user = {
-  name: 'Tom Cook',  //admin email username
-  email: 'tom@example.com',
+  name: 'Admin',  //admin email username
+  email: 'admin@example.com',
   imageUrl:
     'https://t3.ftcdn.net/jpg/00/65/75/68/360_F_65756860_GUZwzOKNMUU3HldFoIA44qss7ZIrCG8I.jpg',
 }
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
-  { name: 'Question Paper', href: '#', current: false },
+  { name: 'Question Paper', href: 'admin/setTest', current: false },
   { name: 'Student Data', href: '#', current: false },
   { name: 'Student Scores', href: '#', current: false },
 //   { name: 'Reports', href: '#', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '#', onClick: ()=>{
+    localStorage.removeItem('token');
+    window.location.href ='/login';  // take to login page
+  } },  
 ]
 
 function classNames(...classes) {
@@ -28,7 +30,7 @@ function classNames(...classes) {
 const AdminDashBoard=()=> {
   return (
     <>
-      <div className="min-h-full">
+      <div className="h-dvh ">
         <Disclosure as="nav" className="bg-gray-800">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
@@ -86,6 +88,7 @@ const AdminDashBoard=()=> {
                         <MenuItem key={item.name}>
                           <a
                             href={item.href}
+                            onClick={item.onClick}
                             className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                           >
                             {item.name}

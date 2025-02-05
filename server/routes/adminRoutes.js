@@ -28,11 +28,10 @@ router.post('/createAdmin', async (req, res) => {
         const newAdmin = new Admin({username, email, password});
         await newAdmin.save();
         // generate the token jwt after successful signup
-        const token = jwt.sign({id:newAdmin._id, role: 'admin'}, process.env.JWT_SECRET, {expiresIn:'7d'})
+        // const token = jwt.sign({id:newAdmin._id, role: 'admin'}, process.env.JWT_SECRET, {expiresIn:'7d'})
         // send/store  the token as soon as signup to admin 
         return res.status(201).send({
-            message: 'Admin created successfully token authencation token valid upto 1hour',
-            token: token});
+            message: 'Admin created successfully'});
 
     } catch(err){
         return res.status(400).send({message: err.message})
@@ -57,7 +56,7 @@ router.post('/login', async(req,res) => {
         }
         const token = jwt.sign({id:admin._id, role: 'admin'}, process.env.JWT_SECRET,{expiresIn : '7d'})
         
-        return res.status(200).send({message : 'Login successful ', token}) // send tokens
+        return res.status(200).send({message : 'Login successful ', token}) // send tokens to front end
 
     } catch(err){
         return res.status(500).send({message : "error during login", err: err.message});

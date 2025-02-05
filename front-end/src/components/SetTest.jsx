@@ -30,14 +30,14 @@ const SetTest = () => {
     ];
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target;  // update test data when form is filled
         setTestData(prev => ({
             ...prev,
             [name]: value
         }));
     };
 
-    const fetchQuestions = async (subject) => {
+    const fetchQuestions = async (subject) => {   // calling function to fetch availble questions
         setLoading(true);
         try {
             const response = await axios.get('http://localhost:3000/admin/getquestion');
@@ -123,7 +123,7 @@ const SetTest = () => {
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold">Select Questions - {currentSubject?.name}</h3>
                     <button 
-                        onClick={() => setShowQuestionModal(false)}
+                        onClick={() => setShowQuestionModal(false)}  
                         className="text-gray-500 hover:text-gray-700"
                     >
                         ✕
@@ -163,7 +163,7 @@ const SetTest = () => {
     );
 
     return (
-        <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8 bg-gradient-to-r from-green-200 to-fuchsia-200">
             <div className="max-w-7xl mx-auto">
                 <h2 className="mt-5 text-center text-2xl font-bold tracking-tight text-gray-900">
                     Create Test
@@ -251,7 +251,7 @@ const SetTest = () => {
                                     key={subject.id}
                                     type="button"
                                     onClick={() => handleSubjectClick(subject)}
-                                    className="p-4 border rounded-lg hover:bg-gray-50"
+                                    className="p-4 border rounded-lg hover:bg-purple-100"
                                 >
                                     {subject.name}
                                     {testData.subjects.find(s => s.name === subject.name)?.questions.length > 0 && (
@@ -266,7 +266,7 @@ const SetTest = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors"
+                        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-green-500 transition-colors"
                     >
                         Create Test
                     </button>

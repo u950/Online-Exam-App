@@ -1,9 +1,11 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { createContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const SignUpForm = () => {
 
+  const [isSignUp, setSignUp] = useState(false)
+  
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -26,20 +28,20 @@ const SignUpForm = () => {
     console.log('submitted form sign up');
     try{
       const response = await axios.post('http://localhost:3000/account/sign-up', formData)
-      if(response.status !== 200){
-        console.log('error sign up')
-        alert('sign not successfull')
-      }
-
-      alert('sign up successful')
-      setFormData({
-        username: '',
-        email:'',
-        password:'',
-        examType:'',
-      })
-      navigate('/login')
-
+      if(response.status !== 201){
+        console.log('error sign up', response.error)
+        alert('sign UnSuccessfull')
+      } 
+      else{
+        alert('sign up successful')
+        setFormData({
+          username: '',
+          email:'',
+          password:'',
+          examType:'',
+        })
+        navigate('/login')
+    }
     } catch(e) {
       console.log('error sign up', response.data?.error)
 
@@ -47,7 +49,7 @@ const SignUpForm = () => {
 
   }
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 ">
+    <div className="flex min-h-full flex-col bg-gradient-to-l from-pink-100 to-cyan-200 justify-center px-6 py-12 lg:px-8 ">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm ">
       <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
         Create Your Account

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { logo } from '../../../public/logo';
+import { jwtDecode } from 'jwt-decode';
 
 const LoginForm = () => {
   const navigate= useNavigate();
@@ -28,19 +29,30 @@ const LoginForm = () => {
 
     try{
       const response = await axios.post('http://localhost:3000/account/login', formData)
-      console.log('login success', response.data)
-      
+      console.log('login success', response.data.token)
+      // response.data contain jwt token
+
       setFormData({
       username: '',
       password: '',
     });
     // store token for authentication
     if(response.data.token) {
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token');  //storing token to local storage
       setLogin(true);
+
+      const decoded = jwtDecode(response.data.token)
+      const {role, _id} = decoded;
+
+      // console.log("role and id => ",_id)
+      
+      if(role === 'user')
+        navigate(`/student-dashboard/${_id}`);
+      else if (role === 'admin')
+        navigate(`/admin-dashboard/${_id}`)
     }
     // navigate to home page or dash board
-    navigate('/');
+      // based on student or admin dashBoard /admin-dashboard or student
 
     } catch (error) {
       console.error('Login error', error.response?.data || error.message)
@@ -49,16 +61,16 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex h-dvh bg-gradient-to-l from-purple-100 to-cyan-200 flex-col justify-center px-6 py-12 lg:px-8 bg-rose-100">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-20 w-auto" src={logo} alt="Your Company"/>
+      <img className="mx-auto h-20 w-auto mix-blend-darken " src={logo} alt="Your Company"/>
         <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
           Sign in to your account
         </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm p-8 bg-white border border-gray-300 rounded-lg shadow-lg ">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm p-8  border bg-white border-gray-300 rounded-lg shadow-lg backdrop-blur-0">
+        <form onSubmit={handleSubmit} className="space-y-6 ">
           <div>
             <label className="block text-sm font-medium text-gray-900">
               Username
@@ -111,10 +123,12 @@ const LoginForm = () => {
           <a href="/sign-up" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Don't have an account? Sign up
           </a>
-          {isLoggedIn && (
-            <p className="text-green-600">Login success</p>
-          )}
         </p>
+        {isLoggedIn && (
+          <div className="text-green-600 text-center mt-2">
+            Login success
+          </div>
+        )}
       </div>
     </div>
   );
