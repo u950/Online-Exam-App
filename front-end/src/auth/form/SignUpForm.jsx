@@ -1,12 +1,20 @@
 import axios from 'axios';
-import React, { createContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, {  useState } from 'react'
+
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SignUpForm = () => {
 
   const [isSignUp, setSignUp] = useState(false)
+  const location = useLocation();
+
+  const {user} = location.state || {};
   
   const navigate = useNavigate();
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   
   const [formData, setFormData] = useState({
     username: "",
@@ -25,29 +33,41 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('submitted form sign up');
-    try{
-      const response = await axios.post('http://localhost:3000/account/sign-up', formData)
-      if(response.status !== 201){
-        console.log('error sign up', response.error)
-        alert('sign UnSuccessfull')
-      } 
-      else{
-        alert('sign up successful')
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+
+      const response = await axios.post('http://localhost:3000/auth/signup', {
+        ...formData,
+        examType: formData.examType.toUpperCase()
+      });
+
+      if (response.data) {
+        // Show success message
+        alert('Sign up successful!');
+        // console.log(response) // checking what ir has
+        // Clear form
         setFormData({
           username: '',
-          email:'',
-          password:'',
-          examType:'',
-        })
-        navigate('/login')
+          email: '',
+          password: '',
+          examType: '',
+        });
+        // Redirect to login
+        navigate('/login', {state:{user: user}});  // student url + id require to fixthis
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      setError(
+        error.response?.data?.message || 
+        'An error occurred during signup. Please try again.'
+      );
+    } finally {
+      setIsLoading(false);
     }
-    } catch(e) {
-      console.log('error sign up', response.data?.error)
+  };
 
-    }
-
-  }
   return (
     <div className="flex min-h-full flex-col bg-gradient-to-l from-pink-100 to-cyan-200 justify-center px-6 py-12 lg:px-8 ">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm ">
@@ -57,6 +77,12 @@ const SignUpForm = () => {
     </div>
 
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm p-7 bg-white border border-gray-300 rounded-xl shadow-lg ">
+      {error && (
+        <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 rounded-lg">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} 
         className="space-y-6">
         <div>
@@ -135,18 +161,26 @@ const SignUpForm = () => {
         <div>
           <button
             type="submit"
-            className="btn-primary"
+            disabled={isLoading}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
+              ${isLoading 
+                ? 'bg-indigo-400 cursor-not-allowed' 
+                : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              }`}
           >
-            Sign Up
+            {isLoading ? 'Signing up...' : 'Sign Up'}
           </button>
         </div>
       </form>
 
       <p className="mt-10 text-center text-sm text-gray-500">
+        Note: remember username and password <br/>
         Already have an Account?
-        <a href="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
+        <Link to="/login" 
+          state={{user : 'user'}}
+          className="font-semibold text-indigo-600 hover:text-indigo-500">
           Log In
-        </a>
+        </Link>
       </p>
     </div>
   </div>

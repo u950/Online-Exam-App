@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { logo } from '../../../public/logo';
 import { jwtDecode } from 'jwt-decode';
 
+
+
 const LoginForm = () => {
+
+  const location = useLocation();
+  const {user} = location.state || {};
+
+  const [response, setResponse]= useState("");  // local variable
+
   const navigate= useNavigate();
   const [isLoggedIn, setLogin] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,112 +31,145 @@ const LoginForm = () => {
   };
 
   const handleSubmit = async(e) => {
-    e.preventDefault(); // ✅ Fixed typo
+    e.preventDefault();
     setError(null);
     console.log('Login form submitted data', formData);
 
-    try{
-      const response = await axios.post('http://localhost:3000/account/login', formData)
-      console.log('login success', response.data.token)
-      // response.data contain jwt token
+    try {
+      if(!user){
+        alert('Select valid user!')
+        navigate('/')
+      }
+
+      if(user === 'user'){
+        const response = await axios.post('http://localhost:3000/auth/login', formData)
+
+        if(response){
+          const token = response.data.token
+
+          localStorage.setItem('token', token)
+          const decoded = jwtDecode(token);
+          const {role, id} = decoded;
+
+          if(role === 'user')
+            navigate(`/student-dashboard/${id}`)
+          else setError("UnAuthorized access")
+        } else{
+          setError("unable fetch data..")
+        }
+      } else if(user === 'admin'){
+        const response = await axios.post('http://localhost:3000/admin/login', formData)
+
+        if(response ){
+          const token = response.data.token
+          // const id = response.data.id
+          localStorage.setItem('token', token)
+          const decoded = jwtDecode(token)
+          const {role, id}= decoded
+          
+          // console.log('id of admin',)
+          console.log('role admin', role)
+
+          if(role === 'admin'){
+            console.log('Admin login success')
+            navigate(`/admin-dashboard/${id}`)
+          }
+          else setError("UnAuthorized Admin access")
+        } else{
+          setError('Unable fetch Admin data')
+        }
+      }
 
       setFormData({
-      username: '',
-      password: '',
-    });
-    // store token for authentication
-    if(response.data.token) {
-      localStorage.setItem('token');  //storing token to local storage
-      setLogin(true);
+        username: '',
+        password: '',
+      });
 
-      const decoded = jwtDecode(response.data.token)
-      const {role, _id} = decoded;
-
-      // console.log("role and id => ",_id)
-      
-      if(role === 'user')
-        navigate(`/student-dashboard/${_id}`);
-      else if (role === 'admin')
-        navigate(`/admin-dashboard/${_id}`)
-    }
-    // navigate to home page or dash board
-      // based on student or admin dashBoard /admin-dashboard or student
-
+      setLogin(true)
     } catch (error) {
-      console.error('Login error', error.response?.data || error.message)
-      setError(error.response?.data?.message || "something went wrong")
+      console.error('Login error' || error.message)
+      setError(error.message || "Something went wrong")
     }
   };
 
   return (
-    <div className="flex h-dvh bg-gradient-to-l from-purple-100 to-cyan-200 flex-col justify-center px-6 py-12 lg:px-8 bg-rose-100">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img className="mx-auto h-20 w-auto mix-blend-darken " src={logo} alt="Your Company"/>
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Sign in to your account
+    <div className="flex min-h-screen bg-gradient-to-l from-purple-100 to-cyan-200 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm flex-row">
+        <img className="mx-auto h-20 w-auto mix-blend-multiply" src={logo} alt="Company Logo"/>
+        
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          {user === 'admin' ? 'Log In to your Admin account' : 'Log In to your Account'}
         </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm p-8  border bg-white border-gray-300 rounded-lg shadow-lg backdrop-blur-0">
-        <form onSubmit={handleSubmit} className="space-y-6 ">
-          <div>
-            <label className="block text-sm font-medium text-gray-900">
-              Username
-            </label>
-            <div className="mt-2">
-              <input
-                type="username"
-                name="username"
-                id="username"
-                autoComplete="username"
-                required
-                value={formData.username} // ✅ Uncommented
-                onChange={handleChange}
-                className="input-field"
-              />
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="bg-white p-8 rounded-xl shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg">
+                {error}
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Username
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  autoComplete="username"
+                  required
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-900">
-              Password
-            </label>
-            <div className="mt-2">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                autoComplete="current-password"
-                required
-                value={formData.password} // ✅ Uncommented
-                onChange={handleChange}
-                className="input-field"
-              />
+            <div>
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Password
+              </label>
+              <div className="mt-2">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  autoComplete="current-password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <button
-              type="submit"
-              className="btn-primary"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+            <div>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Sign in
+              </button>
+            </div>
+          </form>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
-          Quote: It's not about being the best, it's about being better than you were yesterday
-          <br />
-          <a href="/sign-up" className="font-semibold text-indigo-600 hover:text-indigo-500">
-            Don't have an account? Sign up
-          </a>
-        </p>
-        {isLoggedIn && (
-          <div className="text-green-600 text-center mt-2">
-            Login success
-          </div>
-        )}
+          {user === 'admin' ? "" : <p className="mt-10 text-center text-sm text-gray-500">
+            Not registered yet?{' '}
+            <a href="/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Create an account
+            </a>
+          </p>}
+          
+          {isLoggedIn && (
+            <div className="mt-4 p-3 text-sm text-green-600 bg-green-50 rounded-lg text-center">
+              Login successful! Redirecting...
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

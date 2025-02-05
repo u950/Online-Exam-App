@@ -131,9 +131,13 @@ const QuestionForm=()=>{
                                     onChange={()=>selectedSubjected(e.target.value)}
                                     className="rounded-lg p-2 border-2 border-gray-300 cursor-pointer hover:border-indigo-500 drop-shadow-md"
                                 >
-                                    {Subjects.map((item, id) =>(
-                                        <option id={item.id}
-                                        >{item.name}</option>
+                                    {Subjects.map((item) => (
+                                        <option 
+                                            key={item.id}
+                                            id={item.id}
+                                        >
+                                            {item.name}
+                                        </option>
                                     ))}
                                 </select>
                             </div>

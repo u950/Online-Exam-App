@@ -19,7 +19,7 @@ const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Sign out', href: '#', onClick: ()=>{
     localStorage.removeItem('token');
-    window.location.href ='/login';  // take to login page
+    window.location.href ='/';  // take to login page
   } },  
 ]
 
