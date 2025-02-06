@@ -10,6 +10,8 @@ import QuestionForm from './components/UploadQuestion'
 import GetQuestions from './components/SetTest'
 import PrivateRoute from './auth/PrivateRoute'
 import { NotFount } from './pages/NotFound'
+import TestInstruction from './components/Testinstruction'
+import TestPage from './pages/TestPage'
 
 const App = () => {
   return (
@@ -21,15 +23,17 @@ const App = () => {
           <Route path='/sign-up' element={<SignUpForm />}/>
         </Route>
         {/* private routes */}
-        <Route element={<PrivateRoute/>}>
+        <Route element={<PrivateRoute allowedRoles={["admin"]}/>}>
           
           <Route path='/admin-dashboard/:id' element={<AdminDashBoard/>}/>
           <Route path='/admin-setQuestions' element={<QuestionForm/>}/>
           <Route path='/admin/setTest' element={<GetQuestions/>}/>
         </Route>
         {/* private routes for student */}
-        <Route element={<PrivateRoute/>}>
+        <Route element={<PrivateRoute allowedRoles={['user']}/>}>
           <Route path='/student-dashboard/:id' element={<StudentDashBoard/>}/>
+          <Route path='/student/test/instruction' element={<TestInstruction/>}/>
+          <Route path='/student/testpage/:id' element={<TestPage/>}/>
         </Route>
         <Route index element={<Home/>}/>
         <Route path='*' element={<NotFount/>}/>

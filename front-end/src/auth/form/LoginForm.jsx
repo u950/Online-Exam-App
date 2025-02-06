@@ -33,13 +33,15 @@ const LoginForm = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     setError(null);
-    console.log('Login form submitted data', formData);
+    // console.log('Login form submitted data', formData);
 
     try {
       if(!user){
         alert('Select valid user!')
         navigate('/')
       }
+
+      const { username } = formData; // Ensure username is defined
 
       if(user === 'user'){
         const response = await axios.post('http://localhost:3000/auth/login', formData)
@@ -52,7 +54,7 @@ const LoginForm = () => {
           const {role, id} = decoded;
 
           if(role === 'user')
-            navigate(`/student-dashboard/${id}`)
+            navigate(`/student-dashboard/${id}`, {state: {username}}) // Pass username correctly
           else setError("UnAuthorized access")
         } else{
           setError("unable fetch data..")

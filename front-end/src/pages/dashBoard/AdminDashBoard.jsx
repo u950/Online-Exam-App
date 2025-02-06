@@ -10,7 +10,7 @@ const user = {
 }
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
-  { name: 'Question Paper', href: 'admin/setTest', current: false },
+  { name: 'Question Paper', href: '#', onClick: ()=>{window.location.href='/admin/setTest'} },
   { name: 'Student Data', href: '#', current: false },
   { name: 'Student Scores', href: '#', current: false },
 //   { name: 'Reports', href: '#', current: false },
@@ -48,6 +48,7 @@ const AdminDashBoard=()=> {
                       <a
                         key={item.name}
                         href={item.href}
+                        onClick={item.onClick}
                         aria-current={item.current ? 'page' : undefined}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',

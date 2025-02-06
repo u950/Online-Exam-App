@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import axios from "axios";
 import 'katex/dist/katex.min.css';
 import TeX from '@matejmazur/react-katex';
@@ -59,10 +58,16 @@ const QuestionForm=()=>{
                 topic: formData.topic.trim() || undefined, // Only send if not empty
                 questionText: formData.questionText.trim(),
                 options: optionsArray,
-                correctAnswer: optionsArray[correctAnswerIndex] // Send the actual answer text
+                correctAnswer: correctAnswerIndex
             };
 
-            const response = await axios.post('http://localhost:3000/admin/createQuestion', finalFormData);
+            const token = localStorage.getItem('token')
+            // console.log('question',token)
+            const response = await axios.post('http://localhost:3000/admin/createQuestion', finalFormData,{
+                headers: {
+                    Authorization : `Bearer ${token}`
+                }
+            });
             
             // Update count for the selected subject
             setQuestionCounts(prev => ({
@@ -128,7 +133,11 @@ const QuestionForm=()=>{
                                 <select 
                                     name="subject" 
                                     id={Subjects.id}
-                                    onChange={()=>selectedSubjected(e.target.value)}
+                                    value={selectedSubjected.name}
+                                    onChange={(e) => {
+                                        const subject = Subjects.find(s => s.name === e.target.value);
+                                        setSelectedSubject(subject);
+                                    }}
                                     className="rounded-lg p-2 border-2 border-gray-300 cursor-pointer hover:border-indigo-500 drop-shadow-md"
                                 >
                                     {Subjects.map((item) => (
@@ -225,7 +234,7 @@ const QuestionForm=()=>{
                         <div className="flex justify-end mt-6">
                             <button
                                 type="submit"
-                                className="rounded-md cursor-progress bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="rounded-md cursor-pointer bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
                                 Save Question
                             </button>
