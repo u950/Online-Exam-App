@@ -13,11 +13,11 @@ const testAttemptSchema = new mongoose.Schema({
         index: true
     },
     responses:[{
-        questioId:{
+        questionId:{
             type: mongoose.Schema.Types.ObjectId,
             ref:'Question'
         },
-        selectedoption:String,
+        selectedOption:Number,   // changed to store number only for easy validation
         timeTaken:{
             type:Number,
             required: true
@@ -41,6 +41,13 @@ const testAttemptSchema = new mongoose.Schema({
 
 // as soon as the user submits answers this should be filled to database , and fetched later
 
-testAttemptSchema.index({user: 1, test: 1})
+testAttemptSchema.index({user: 1, testId: 1})
+
+testAttemptSchema.statics.findByStudentId= function(studentId){
+    return this.find({user : studentId})
+        .populate('testId', 'name')
+        .select('testId timeTaken score completedAt')
+        .sort({completedAt: -1})
+}
 
 export const TestAttempt = mongoose.model('TestAttempt', testAttemptSchema);

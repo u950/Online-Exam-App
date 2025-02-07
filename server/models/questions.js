@@ -21,7 +21,7 @@ const questionShema = new mongoose.Schema({
     // not required for fill in the blank type question
     }],
     correctAnswer: {
-        type: String,
+        type: Number,
         required:true
     }
 })

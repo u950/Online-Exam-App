@@ -56,7 +56,7 @@ router.post('/login', async(req,res) => {
         }
         const token = jwt.sign({id:admin._id, role: 'admin'}, process.env.JWT_SECRET,{expiresIn : '7d'})
         
-        return res.status(200).send({message : 'Login successful ', token}) // send tokens to front end
+        return res.status(200).send({message : 'Login successful ', token: token , id:admin._id}) // send tokens to front end
 
     } catch(err){
         return res.status(500).send({message : "error during login", err: err.message});
@@ -118,7 +118,7 @@ router.get('/admins',async (req, res) =>{
 
 // create question
 // path /admin/createQuestion
-router.post('/createQuestion', async (req, res) => {
+router.post('/createQuestion',auth,async (req, res) => {
     const {subject, topic, questionText, options, correctAnswer} = req.body;
 
     try {

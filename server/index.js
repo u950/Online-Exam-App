@@ -17,9 +17,9 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.use('/account', signupRoutes) // create user here login
+app.use('/auth', signupRoutes) // create user here login
 
-app.use('/user', userRoutes);
+app.use('/user', userRoutes);  // access exams
 // admin routes
 app.use('/admin', adminRoutes); // create admin here 
 

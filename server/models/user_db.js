@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
@@ -46,6 +45,14 @@ userSchema.pre('save', async function(next) {
 
     next();  // continue
 })
+
+userSchema.methods.comparePassword = async function(candidatePassword) {
+    try {
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (error) {
+        throw new Error(error);
+    }
+};
 
 // export mongoode model named User
 export const User = mongoose.model('User', userSchema);

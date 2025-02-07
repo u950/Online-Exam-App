@@ -142,7 +142,7 @@ const StudentDashBoard=()=> {
                 <h1 className="font-extrabold p-4 text-5xl">Student Stats</h1>
               </div>
               { scores.length >0 && 
-                <TabComponent scores={scores[1]}/>}
+                <TabComponent scores={scores[0]}/>}  // disply scores
             </div>
               
           </div>
