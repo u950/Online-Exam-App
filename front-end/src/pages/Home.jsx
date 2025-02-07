@@ -22,6 +22,8 @@ const Home = () => {
     }
     // If neither 'user' nor 'admin' is selected, do nothing
   }
+  if(localStorage.getItem('token'))
+    localStorage.removeItem('token')
 
   return (
     <div className='flex min-h-screen flex-col bg-gray-50'>

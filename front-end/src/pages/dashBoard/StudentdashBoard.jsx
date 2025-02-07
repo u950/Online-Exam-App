@@ -1,4 +1,3 @@
-
 import { createContext, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useLocation, useParams } from "react-router-dom";
@@ -17,7 +16,7 @@ const user = {
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
   { name: 'Tests', href: '#', current: false },
-  { name: 'History', href: '#', current: false },
+  { name: 'History', href: '#',  },
   { name: 'BookMarks', href: '#', current: false },
 //   { name: 'Reports', href: '#', current: false },
 ]
@@ -36,8 +35,8 @@ const StudentDashBoard=()=> {
   const {id} = useParams();
   const location = useLocation();
 
-  // const {username} = location.state || {}
-  // console.log(username)
+  const {username} = location.state || {}
+  // console.log('username ',username)
 
   const [testData, setTestData] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -47,10 +46,36 @@ const StudentDashBoard=()=> {
   const [err, setError] = useState(null);
 
   // console.log('id',id)
+  localStorage.removeItem('testStartTime')
+  const [scores , setScores] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  
+
+  
+  
+  const fetchData = async() => {
+    setLoading(true)
+    try {  
+      const response = await axios.get(`http://localhost:3000/user/student/getresults/${id}`)
+      if (response.data && response.data.length > 0) {
+        setScores(response.data)
+        console.log('test scores fetched successfully')
+      } else {
+        console.log('No test attempts found')
+        setScores([]) // Set empty array for no attempts
+      }
+    } catch(e) {
+      console.log('Error fetching test attempts:', e.response?.data?.message || e.message)
+      setError(e.response?.data?.message || 'Failed to fetch test attempts')
+      setScores([]) // Set empty array on error
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const fetchTest= async()=>{
     try{
-      const response = await axios.get(`http://localhost:3000/user/test/${id}`)
+      const response = await axios.get(`http://localhost:3000/user/test/${id}`)   // fetching test data using user id only 
       if(!response.data){
         console.log('test not availble', response.data.message)
         setError('test not available')
@@ -70,9 +95,11 @@ const StudentDashBoard=()=> {
   useEffect( ()=>{
     setLoading(true);
     fetchTest();
-    
+    fetchData();
     // setLoading(false);
   },[id])
+
+  
 
   return (
     <>
@@ -83,6 +110,7 @@ const StudentDashBoard=()=> {
           navigation={navigation}
           user={user}
           userNavigation={userNavigation}
+          
         />
         {loading && 
           <div className="flex h-dvh w-dvw justify-center items-center">
@@ -93,6 +121,7 @@ const StudentDashBoard=()=> {
 
         <main>
           <div className="mx-auto w-full size-full px-4 py-6 sm:px-6 lg:px-8 bg-gradient-to-r from-cyan-200 to-lime-200">
+            {username && <h2 className="text-2xl font-semibold "> Hello, {username}</h2>}
           <div className="flex justify-center">
             <h2 className="font-bold text-4xl" >Available Tests</h2>
           </div>
@@ -100,9 +129,11 @@ const StudentDashBoard=()=> {
               
               {testData.map((item)=>(
                 <Card 
-                  key={item._id}
+                  key={item._id}  // test id
                   image={testImg}
                   data={item}
+                  studentId={id}
+                  studentName={username}
                 />
               ))}
             </div>
@@ -110,7 +141,8 @@ const StudentDashBoard=()=> {
               <div className="flex justify-center">
                 <h1 className="font-extrabold p-4 text-5xl">Student Stats</h1>
               </div>
-              <TabComponent/>
+              { scores.length >0 && 
+                <TabComponent scores={scores[1]}/>}
             </div>
               
           </div>

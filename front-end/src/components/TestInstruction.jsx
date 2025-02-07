@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 const TestInstruction = () => {
 
     const location = useLocation()
-    const {data} = location.state || {};
+    const {data, userId, studentName} = location.state || {};
 
     // const {id} = useParams;
 
@@ -15,7 +15,7 @@ const TestInstruction = () => {
     }
 
     const handleClick =()=> {
-        navigate(`/student/testpage/${data._id}/`, {state:{data: data}})
+        navigate(`/student/testpage/${data._id}/`, {state:{data: data, userId: userId, studentName: studentName}})  // sending userId to test page 
     }
   return (
     <div className='flex flex-col h-dvh w-full'>    

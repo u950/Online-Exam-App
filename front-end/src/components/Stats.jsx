@@ -1,8 +1,33 @@
 import { useState } from "react";
 
-const TabComponent = () => {
+const TabComponent = ({scores}) => {
   const [activeTab, setActiveTab] = useState("stats");
 
+  const truncateString = (str, maxLength = 20) => {
+    if (!str) return '';
+    return str.length > maxLength ? str.substring(0, maxLength) + '...' : str;
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    
+    // Format date: DD/MM/YYYY
+    const formattedDate = date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+
+    // Format time: HH:MM AM/PM
+    const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+
+    return `${formattedDate}, ${formattedTime}`;
+  };
   const Labels = [
     { id: "stats", label: "Statistics" },
     { id: "services", label: "What you will Get" },
@@ -10,11 +35,11 @@ const TabComponent = () => {
   ]
     
   const StatCounts = [
-    { label: "Questions", value: "300" },
-    { label: "Mock tests", value: "10" },
-    { label: "Maths", value: "30" },
-    { label: "Physics", value: "25" },
-    { label: "Chemistry", value: "39" },
+    { label: "Test name", value: `${scores.testName}` },
+    { label: "id", value: `${truncateString(scores.id ,4)}` },
+    { label: "Total Score", value: `${scores.score}` },
+    { label: "Time Taken", value: `${scores.timeTaken}` },
+    { label: "Test Date", value: `${formatDateTime(scores.completedAt)}` },
     { label: "Hours spent", value: "10+" },
   ];
 

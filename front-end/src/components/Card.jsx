@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom'
 
 const Card = (props) => {
 
-    const { image, data } = props;
+    const { image, data ,studentId, studentName} = props;
     const navigate = useNavigate();
     // const id = data._id
     // const name = data.title
 
     const handleClick =()=>{
-        navigate('/student/test/instruction', {state: {data:data}})
+        navigate('/student/test/instruction', {state: {data:data, userId: studentId, studentName: studentName}})  // sending userId to testpage
     }
   return (
         <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 transition-transform transform hover:scale-105">

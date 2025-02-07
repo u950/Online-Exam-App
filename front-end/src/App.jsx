@@ -12,6 +12,7 @@ import PrivateRoute from './auth/PrivateRoute'
 import { NotFount } from './pages/NotFound'
 import TestInstruction from './components/Testinstruction'
 import TestPage from './pages/TestPage'
+import StudentTestResults from './pages/StudentTestResults'
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
           <Route path='/student-dashboard/:id' element={<StudentDashBoard/>}/>
           <Route path='/student/test/instruction' element={<TestInstruction/>}/>
           <Route path='/student/testpage/:id' element={<TestPage/>}/>
+          {/* <Route path='/student/test/results/:id' element={<StudentTestResults/>}/> */}
         </Route>
         <Route index element={<Home/>}/>
         <Route path='*' element={<NotFount/>}/>
